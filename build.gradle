@@ -1,0 +1,92 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group 'page.nafuchoco'
+version '0.1.0'
+
+jar {
+    manifest {
+        attributes("Main-Class": "page.nafuchoco.neobot.core.Main",
+                "Implementation-Title": "NeoBotCore",
+                "Implementation-Version": getArchiveVersion().get()
+        )
+    }
+}
+
+shadowJar {
+    archiveFileName.set("NeoBotCore." + archiveExtension.get())
+}
+
+task sourcesJar(type: Jar, dependsOn: 'classes') {
+    from sourceSets.main.allSource
+    archiveClassifier.set('sources')
+}
+task javadocJar(type: Jar, dependsOn: 'javadoc') {
+    from javadoc.destinationDir
+    archiveClassifier.set('javadoc')
+}
+javadoc {
+    options.charSet = 'UTF-8'
+    options.encoding = 'UTF-8'
+}
+task beforeDeploy {
+    dependsOn('sourcesJar', 'javadocJar', 'shadowJar')
+}
+publishing {
+    publications {
+        mavenAar(MavenPublication) {
+            from components.java
+            afterEvaluate {
+                artifact javadocJar
+                artifact sourcesJar
+            }
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://m2.dv8tion.net/releases' }
+}
+
+dependencies {
+    // Logger
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'ch.qos.logback:logback-core:1.2.11'
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
+    implementation 'io.sentry:sentry-logback:5.7.4'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    // ClientLib
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    api('net.dv8tion:JDA:5.0.0-alpha.12') {
+        exclude module: 'opus-java'
+    }
+
+    // Parser
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.3'
+
+    // Commons Library
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'commons-codec:commons-codec:1.15'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+    // SQL
+    implementation 'com.zaxxer:HikariCP:5.0.1'
+    implementation 'mysql:mysql-connector-java:8.0.29'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.4'
+
+    // Other
+    implementation 'de.vandermeer:asciitable:0.3.2'
+}

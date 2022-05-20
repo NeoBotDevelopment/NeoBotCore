@@ -1,0 +1,22 @@
+##########################################################
+#       Welcome to NeoBotCore's configuration file.      #
+#                   Author : NAFU_at                     #
+#            config version: v1.0.0                      #
+##########################################################
+
+###############################################
+#                Basic Settings               #
+###############################################
+basic: # This is the configuration required to use this bot.
+  discordToken: "YourTokenHere"        # Set the token that this Bot will use to authenticate to the Discord API.
+
+  database: # Set the connection information of the database to store the data.
+    databaseType: "MARIADB"            # Specify the type of database. (MARIADB/MYSQL)
+    tablePrefix: "sj_"
+    address: localhost:3306
+    database: NeoJukePro
+    username: NeoJukePro
+    password: PaSsWoRd
+
+# --- --- --- --- #
+sentryDsn: ""
