@@ -12,10 +12,10 @@ basic: # This is the configuration required to use this bot.
 
   database: # Set the connection information of the database to store the data.
     databaseType: "MARIADB"            # Specify the type of database. (MARIADB/MYSQL)
-    tablePrefix: "sj_"
+    tablePrefix: "nb_"
     address: localhost:3306
-    database: NeoJukePro
-    username: NeoJukePro
+    database: NeoBotCore
+    username: NeoBotCore
     password: PaSsWoRd
 
 # --- --- --- --- #
