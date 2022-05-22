@@ -19,20 +19,12 @@ package page.nafuchoco.neobot.api.command;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public interface ICommandExecutor {
     /**
      * @return Name of the command executor
      */
     @NotNull
     String getName();
-
-    /**
-     * @return Command Execuator aliases
-     */
-    @NotNull
-    List<String> getAliases();
 
     /**
      * Execute the command.
@@ -47,9 +39,4 @@ public interface ICommandExecutor {
      */
     @NotNull
     String getDescription();
-
-    /**
-     * @return Minimum permissions required to run this command
-     */
-    int getRequiredPerm();
 }

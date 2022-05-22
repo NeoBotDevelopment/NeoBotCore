@@ -20,8 +20,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 public abstract class SubCommandOption extends CommandExecutor implements CommandOption {
 
-    public SubCommandOption(String name, String... aliases) {
-        super(name, aliases);
+    public SubCommandOption(String name) {
+        super(name);
     }
 
     @Override

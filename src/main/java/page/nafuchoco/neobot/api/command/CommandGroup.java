@@ -51,22 +51,18 @@ public class CommandGroup {
         Map<String, CommandExecutor> reg = executors.computeIfAbsent(module, key -> new LinkedHashMap<>());
         String name = executor.getName();
         reg.put(name, executor);
-        for (String alias : executor.getAliases())
-            reg.put(alias, executor);
     }
 
     public void removeCommand(String name, NeoModule module) {
         if (executors.containsKey(module)) {
             CommandExecutor executor = executors.get(module).get(name);
             executors.get(module).remove(executor.getName());
-            executor.getAliases().forEach(executors.get(module)::remove);
         }
     }
 
     public void removeCommand(CommandExecutor executor, NeoModule module) {
         if (executors.containsKey(module)) {
             executors.get(module).remove(executor.getName());
-            executor.getAliases().forEach(executors.get(module)::remove);
         }
     }
 

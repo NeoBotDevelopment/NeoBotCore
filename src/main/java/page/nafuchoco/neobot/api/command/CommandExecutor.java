@@ -17,7 +17,6 @@
 package page.nafuchoco.neobot.api.command;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,21 +24,14 @@ public abstract class CommandExecutor implements ICommandExecutor {
     private final List<CommandOption> options = new ArrayList<>();
 
     private final String name;
-    private final List<String> aliases;
 
-    protected CommandExecutor(String name, String... aliases) {
+    protected CommandExecutor(String name) {
         this.name = name;
-        this.aliases = Arrays.asList(aliases);
     }
 
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return aliases;
     }
 
     public List<CommandOption> getOptions() {
