@@ -70,7 +70,7 @@ public class DataStore {
      *               The order of the values must be the same as the order of the indexes.
      */
     public void registerStoreData(Long id, Object... values) {
-        if (values.length != indexes.size())
+        if (values.length != indexes.size() - 1)
             throw new IllegalArgumentException("The number of values must be equal to the number of indexes.");
 
         set(id, values);
@@ -109,10 +109,10 @@ public class DataStore {
     }
 
     private void set(long id, Object... values) {
-        StringBuilder statement = new StringBuilder("INSERT INTO " + name + " (id, ");
+        StringBuilder statement = new StringBuilder("INSERT INTO " + name + " (");
         indexes.entrySet().stream().map(Map.Entry::getKey).forEach(key -> statement.append(key).append(", "));
         statement.delete(statement.length() - 2, statement.length());
-        statement.append(") VALUES (?, ");
+        statement.append(") VALUES (");
         indexes.entrySet().stream().map(Map.Entry::getKey).forEach(key -> statement.append("?, "));
         statement.delete(statement.length() - 2, statement.length());
         statement.append(")");
