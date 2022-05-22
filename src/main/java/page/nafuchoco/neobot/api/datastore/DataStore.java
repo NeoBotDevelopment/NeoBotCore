@@ -43,6 +43,15 @@ public class DataStore {
         return data;
     }
 
+    /**
+     * Gets the data stored in the data store.
+     *
+     * @param id   The guild id of the data to get.
+     * @param key  The key of the data to get.
+     * @param type The type of the data to get.
+     * @param <T>  The type of the data to get.
+     * @return The data stored in the data store.
+     */
     private <T> T get(long id, String key, Class<T> type) {
         try (var connection = connector.getConnection();
              PreparedStatement ps = connection.prepareStatement(
@@ -58,5 +67,39 @@ public class DataStore {
         }
     }
 
-    // TODO: 2022/05/20 add delete method
+    /**
+     * Save to the data store.
+     *
+     * @param id    The guild id of the data to save.
+     * @param key   The key of the data to save.
+     * @param value The value of the data to save.
+     * @param <T>   The type of the data to save.
+     */
+    private <T> void set(long id, String key, T value) {
+        try (var connection = connector.getConnection();
+             PreparedStatement ps = connection.prepareStatement(
+                     "UPDATE " + name + " SET " + key + " = ? WHERE id = ?")) {
+            ps.setObject(1, value);
+            ps.setLong(2, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Deletes the data stored in the data store.
+     *
+     * @param id The guild id of the data to delete.
+     */
+    public void delete(long id) {
+        try (var connection = connector.getConnection();
+             PreparedStatement ps = connection.prepareStatement(
+                     "DELETE FROM " + name + " WHERE id = ?")) {
+            ps.setLong(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
