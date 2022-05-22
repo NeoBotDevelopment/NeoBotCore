@@ -51,7 +51,7 @@ public class DataStore {
     }
 
     /**
-     * Save to the data store.
+     * Update the data registered in the data store.
      *
      * @param id    The guild id of the data to save.
      * @param index The index of the data to save.
@@ -59,7 +59,21 @@ public class DataStore {
      * @param <T>   The type of the data to save.
      */
     public <T> void saveStoreData(long id, String index, T value) {
-        set(id, index, value);
+        update(id, index, value);
+    }
+
+    /**
+     * Register the data with the new ID in the data store.
+     *
+     * @param id     The guild id of the data to register.
+     * @param values The values of the data to register.
+     *               The order of the values must be the same as the order of the indexes.
+     */
+    public void registerStoreData(Long id, Object... values) {
+        if (values.length != indexes.size())
+            throw new IllegalArgumentException("The number of values must be equal to the number of indexes.");
+
+        set(id, values);
     }
 
     /**
@@ -94,8 +108,28 @@ public class DataStore {
         }
     }
 
+    private void set(long id, Object... values) {
+        StringBuilder statement = new StringBuilder("INSERT INTO " + name + " (id, ");
+        indexes.entrySet().stream().map(Map.Entry::getKey).forEach(key -> statement.append(key).append(", "));
+        statement.delete(statement.length() - 2, statement.length());
+        statement.append(") VALUES (?, ");
+        indexes.entrySet().stream().map(Map.Entry::getKey).forEach(key -> statement.append("?, "));
+        statement.delete(statement.length() - 2, statement.length());
+        statement.append(")");
 
-    private <T> void set(long id, String key, T value) {
+        try (var connection = connector.getConnection();
+             PreparedStatement ps = connection.prepareStatement(statement.toString())) {
+            ps.setLong(1, id);
+            for (int i = 0; i < values.length; i++) {
+                ps.setObject(i + 2, values[i]);
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private <T> void update(long id, String key, T value) {
         try (var connection = connector.getConnection();
              PreparedStatement ps = connection.prepareStatement(
                      "UPDATE " + name + " SET " + key + " = ? WHERE id = ?")) {
