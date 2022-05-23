@@ -26,6 +26,8 @@ import java.sql.SQLException;
 public class DatabaseConnector {
     private final HikariDataSource dataSource;
 
+    private String prefix;
+
     public DatabaseConnector(DatabaseType databaseType, String address, String database, String username, String password) {
         var hikariConfig = new HikariConfig();
         hikariConfig.setDriverClassName(databaseType.getJdbcClass());
@@ -41,5 +43,17 @@ public class DatabaseConnector {
 
     public void close() {
         dataSource.close();
+    }
+
+    public HikariDataSource getDataSource() {
+        return dataSource;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
     }
 }

@@ -42,6 +42,8 @@ public class DataStoreBuilder {
         if (storeName == null || indexes.isEmpty())
             throw new IllegalStateException("store name and index must be set");
 
+        storeName = toSnakeCase(storeName);
+
         // add an entry to store the guild id.
         var indexMap = new LinkedHashMap<String, Class>();
         indexMap.put("id", Long.class);
@@ -49,11 +51,11 @@ public class DataStoreBuilder {
 
         // create database tables corresponding to the data store.
         try (var connection = connector.getConnection();
-             var createTableStatement = connection.prepareStatement(generateCreateTableStatement(indexes))) {
+             var createTableStatement = connection.prepareStatement(generateCreateTableStatement(indexMap))) {
             createTableStatement.execute();
 
             // set unique index for the guild id.
-            try (var createIndexStatement = connection.prepareStatement("CREATE INDEX IF NOT EXISTS " + storeName + "_id ON " + storeName + "(id)")) {
+            try (var createIndexStatement = connection.prepareStatement("CREATE INDEX IF NOT EXISTS " + storeName + "_id ON " + connector.getPrefix() + storeName + "(id)")) {
                 createIndexStatement.execute();
             }
         } catch (SQLException e) {
@@ -106,7 +108,7 @@ public class DataStoreBuilder {
      */
     private String generateCreateTableStatement(Map<String, Class> columns) {
         StringBuilder sb = new StringBuilder();
-        sb.append("CREATE TABLE IF NOT EXISTS ").append(toSnakeCase(storeName)).append(" (");
+        sb.append("CREATE TABLE IF NOT EXISTS ").append(connector.getPrefix()).append(storeName).append(" (");
         for (Map.Entry<String, Class> entry : columns.entrySet()) {
             sb.append(toSnakeCase(entry.getKey())).append(" ").append(getTypeString(entry.getValue())).append(", ");
         }

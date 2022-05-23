@@ -85,6 +85,7 @@ public final class NeoBotLauncher implements Launcher {
                 configration.getBasicConfig().getDatabase().getDatabase(),
                 configration.getBasicConfig().getDatabase().getUsername(),
                 configration.getBasicConfig().getDatabase().getPassword());
+        databaseConnector.setPrefix(configration.getBasicConfig().getDatabase().getTablePrefix());
 
         dataStoreManager = new DataStoreManager(databaseConnector);
 
