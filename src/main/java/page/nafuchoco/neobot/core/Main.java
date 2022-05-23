@@ -16,7 +16,10 @@
 
 package page.nafuchoco.neobot.core;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 
 import java.util.Scanner;
 
@@ -27,16 +30,16 @@ public final class Main {
         log.info("Welcome to NeoBotCore. Starting v" + Main.class.getPackage().getImplementationVersion() + ".");
         var startTime = System.currentTimeMillis();
 
-        /*
-        if (BootOptions.isDebug()) {
-            var root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-            var jdaLogger = (Logger) LoggerFactory.getLogger("net.dv8tion");
-            var cpLogger = (Logger) LoggerFactory.getLogger("com.zaxxer.hikari");
-            root.setLevel(Level.DEBUG);
-            jdaLogger.setLevel(Level.DEBUG);
-            cpLogger.setLevel(Level.DEBUG);
-        }
-        */
+
+        //if (BootOptions.isDebug()) {
+        var root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        var jdaLogger = (Logger) LoggerFactory.getLogger("net.dv8tion");
+        var cpLogger = (Logger) LoggerFactory.getLogger("com.zaxxer.hikari");
+        root.setLevel(Level.DEBUG);
+        jdaLogger.setLevel(Level.DEBUG);
+        cpLogger.setLevel(Level.DEBUG);
+        //}
+
 
         new NeoBotLauncher();
         log.info("Done! ({}s)", (double) (System.currentTimeMillis() - startTime) / 1000);
