@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class ModuleLoader {
@@ -56,7 +57,7 @@ public class ModuleLoader {
      */
     public List<File> searchModules() {
         if (dir.exists())
-            return Arrays.stream(dir.listFiles()).filter(file -> file.getName().endsWith(".jar")).toList();
+            return Arrays.stream(dir.listFiles()).filter(file -> file.getName().endsWith(".jar")).collect(Collectors.toList());
         else
             dir.mkdirs();
         return new ArrayList<>();

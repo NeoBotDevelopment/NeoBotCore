@@ -18,6 +18,7 @@ package page.nafuchoco.neobot.api.module;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import java.util.List;
 
@@ -48,7 +49,6 @@ public class ModuleDescription {
      */
     @JsonProperty("website")
     private String website;
-
     /**
      * @return Module main class path
      */
@@ -69,4 +69,9 @@ public class ModuleDescription {
      */
     @JsonProperty("requiredVersion")
     private String requiredVersion;
+    /**
+     * @return Additional intents required by the module
+     */
+    @JsonProperty("additionalIntents")
+    private List<GatewayIntent> additionalIntents;
 }

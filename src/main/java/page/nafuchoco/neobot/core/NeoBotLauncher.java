@@ -94,6 +94,8 @@ public final class NeoBotLauncher implements Launcher {
         // connect to discord
         var shardManagerBuilder =
                 DefaultShardManagerBuilder.create(configration.getBasicConfig().getDiscordToken(), GatewayIntent.GUILD_MESSAGES);
+        shardManagerBuilder.enableIntents(moduleManager.getAdditionalIntents());
+        log.debug("Additional intents: {}", moduleManager.getAdditionalIntents());
         shardManagerBuilder.disableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS);
         shardManagerBuilder.addEventListeners(new SlashCommandEventHandler(this, commandRegistry));
         ShardManager shardManager = null;

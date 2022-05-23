@@ -17,6 +17,7 @@
 package page.nafuchoco.neobot.api.module;
 
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import page.nafuchoco.neobot.api.Launcher;
@@ -33,14 +34,18 @@ import java.util.List;
 
 @Slf4j
 public class ModuleManager {
+    private final Launcher launcher;
     private final ModuleRegistry moduleRegistry;
     private final ModuleLoader moduleLoader;
     private final List<File> files;
+    private final List<GatewayIntent> additionalIntents;
 
     public ModuleManager(Launcher launcher, String moduleDir) {
+        this.launcher = launcher;
         this.moduleRegistry = new ModuleRegistry();
         moduleLoader = new ModuleLoader(launcher, moduleRegistry, moduleDir);
         files = moduleLoader.searchModules();
+        additionalIntents = new ArrayList<>();
     }
 
     /**
@@ -121,6 +126,8 @@ public class ModuleManager {
             log.warn("The same module is already loaded.: {}", module.getDescription().getName());
             return false;
         }
+
+        additionalIntents.addAll(module.getDescription().getAdditionalIntents());
 
         try {
             module.onLoad();
@@ -251,5 +258,9 @@ public class ModuleManager {
                 log.error("An error occurred during the unloading of the module.", e);
             }
         }
+    }
+
+    public List<GatewayIntent> getAdditionalIntents() {
+        return additionalIntents.stream().distinct().toList();
     }
 }
