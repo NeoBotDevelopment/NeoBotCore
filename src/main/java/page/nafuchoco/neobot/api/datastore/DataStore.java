@@ -115,13 +115,16 @@ public class DataStore {
         statement.append(") VALUES (?, ");
         indexes.entrySet().stream().map(Map.Entry::getKey).forEach(key -> statement.append("?, "));
         statement.delete(statement.length() - 2, statement.length());
-        statement.append(")");
+        statement.append(") ON DUPLICATE KEY UPDATE ");
+        indexes.entrySet().stream().map(Map.Entry::getKey).forEach(key -> statement.append(key).append(" = ?, "));
+        statement.delete(statement.length() - 2, statement.length());
 
         try (var connection = connector.getConnection();
              PreparedStatement ps = connection.prepareStatement(statement.toString())) {
             ps.setLong(1, id);
             for (int i = 0; i < values.length; i++) {
                 ps.setObject(i + 2, values[i]);
+                ps.setObject(i + values.length + 2, values[i]); // duplicate key update statement parameter
             }
             ps.executeUpdate();
         } catch (SQLException e) {

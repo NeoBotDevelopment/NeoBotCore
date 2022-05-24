@@ -55,7 +55,7 @@ public class DataStoreBuilder {
             createTableStatement.execute();
 
             // set unique index for the guild id.
-            try (var createIndexStatement = connection.prepareStatement("CREATE INDEX IF NOT EXISTS " + storeName + "_id ON " + connector.getPrefix() + storeName + "(id)")) {
+            try (var createIndexStatement = connection.prepareStatement("CREATE UNIQUE INDEX IF NOT EXISTS " + storeName + "_id ON " + connector.getPrefix() + storeName + "(id)")) {
                 createIndexStatement.execute();
             }
         } catch (SQLException e) {
