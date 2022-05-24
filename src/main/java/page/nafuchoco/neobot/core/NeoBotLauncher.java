@@ -22,10 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.apache.commons.lang3.StringUtils;
 import page.nafuchoco.neobot.api.ConfigLoader;
 import page.nafuchoco.neobot.api.DatabaseConnector;
@@ -93,10 +91,8 @@ public final class NeoBotLauncher implements Launcher {
 
         // connect to discord
         var shardManagerBuilder =
-                DefaultShardManagerBuilder.create(configration.getBasicConfig().getDiscordToken(), GatewayIntent.GUILD_MESSAGES);
-        shardManagerBuilder.enableIntents(moduleManager.getAdditionalIntents());
+                DefaultShardManagerBuilder.create(configration.getBasicConfig().getDiscordToken(), moduleManager.getAdditionalIntents());
         log.debug("Additional intents: {}", moduleManager.getAdditionalIntents());
-        shardManagerBuilder.disableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS);
         shardManagerBuilder.addEventListeners(new SlashCommandEventHandler(this, commandRegistry));
         ShardManager shardManager = null;
 
