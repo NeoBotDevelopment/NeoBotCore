@@ -16,6 +16,8 @@
 
 package page.nafuchoco.neobot.api.command;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,5 +52,10 @@ public abstract class CommandExecutor implements ICommandExecutor {
                 .filter(SubCommandOption.class::isInstance)
                 .map(SubCommandOption.class::cast)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public @NotNull boolean isEphemeral() {
+        return true;
     }
 }

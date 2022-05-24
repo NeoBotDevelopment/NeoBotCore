@@ -38,18 +38,17 @@ public class SlashCommandEventHandler extends ListenerAdapter {
         // とりあえずDiscordにコマンドを受け付けた事を返す
         event.deferReply(true).queue();
         val hook = event.getHook();
-        // hook.setEphemeral(true);
         val responseSender = new SlashCommandResponse(hook);
 
         // レジストリが登録されて居ない場合は無視
         if (registry == null)
             return;
 
-        //neoGuild.setLastJoinedChannel(event.getTextChannel());
-
         // コマンドクラスの取得
         CommandExecutor command = registry.getExecutor(event.getName());
         CommandExecutor subCommand = command.getSubCommands().stream().filter(option -> option.optionName().equals(event.getSubcommandName())).findAny().orElse(null);
+
+        hook.setEphemeral(command.isEphemeral());
 
         // オプションの処理
         val optionsMap = new HashMap<String, AssignedCommandValueOption>();
@@ -86,9 +85,9 @@ public class SlashCommandEventHandler extends ListenerAdapter {
                 context.getSubCommand().onInvoke(context);
 
             if (!responseSender.isExecutorResponded())
-                hook.sendMessage("Your request has been processed!").setEphemeral(true).queue();
+                hook.sendMessage("Your request has been processed!").queue();
         } catch (Exception e) {
-            hook.sendMessage(ExceptionUtil.getStackTrace(e, "Failed to execute the command.")).setEphemeral(true).queue();
+            hook.sendMessage(ExceptionUtil.getStackTrace(e, "Failed to execute the command.")).queue();
         }
     }
 

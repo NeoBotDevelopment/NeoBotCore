@@ -39,4 +39,10 @@ public interface ICommandExecutor {
      */
     @NotNull
     String getDescription();
+
+    /**
+     * @return Command response is ephemeral
+     */
+    @NotNull
+    boolean isEphemeral();
 }
