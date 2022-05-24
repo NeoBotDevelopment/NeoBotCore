@@ -35,20 +35,23 @@ public class SlashCommandEventHandler extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        // とりあえずDiscordにコマンドを受け付けた事を返す
-        event.deferReply(true).queue();
-        val hook = event.getHook();
-        val responseSender = new SlashCommandResponse(hook);
-
-        // レジストリが登録されて居ない場合は無視
-        if (registry == null)
+        // レジストリが登録されてない場合は無視
+        if (registry == null) {
+            event.reply("""
+                    Initialization has not been executed correctly due to some defect. Please report the problem to the administrator.
+                    If you are the administrator and the problem persists, please report the problem to the developer.
+                    """).queue();
             return;
+        }
 
         // コマンドクラスの取得
         CommandExecutor command = registry.getExecutor(event.getName());
         CommandExecutor subCommand = command.getSubCommands().stream().filter(option -> option.optionName().equals(event.getSubcommandName())).findAny().orElse(null);
 
-        hook.setEphemeral(command.isEphemeral());
+        // Discordにコマンドを受け付けた事を返す
+        event.deferReply(command.isEphemeral()).queue();
+        val hook = event.getHook();
+        val responseSender = new SlashCommandResponse(hook);
 
         // オプションの処理
         val optionsMap = new HashMap<String, AssignedCommandValueOption>();
