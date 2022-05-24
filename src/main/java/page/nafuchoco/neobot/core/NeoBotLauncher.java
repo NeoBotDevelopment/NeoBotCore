@@ -66,7 +66,10 @@ public final class NeoBotLauncher implements Launcher {
                 log.error("The correct configuration file could not be retrieved from the executable.\n" +
                         "If you have a series of problems, please contact the developer.", e);
             }
+
+            Runtime.getRuntime().exit(0);
         }
+
         configration = ConfigLoader.loadConfig(configurationFile, NeoBotConfig.class);
 
         // setup sentry for error reporting
