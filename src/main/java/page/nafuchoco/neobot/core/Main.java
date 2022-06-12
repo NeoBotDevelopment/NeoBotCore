@@ -21,6 +21,7 @@ import ch.qos.logback.classic.Logger;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 @Slf4j
@@ -31,14 +32,14 @@ public final class Main {
         var startTime = System.currentTimeMillis();
 
 
-        //if (BootOptions.isDebug()) {
-        var root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-        var jdaLogger = (Logger) LoggerFactory.getLogger("net.dv8tion");
-        var cpLogger = (Logger) LoggerFactory.getLogger("com.zaxxer.hikari");
-        root.setLevel(Level.DEBUG);
-        jdaLogger.setLevel(Level.DEBUG);
-        cpLogger.setLevel(Level.DEBUG);
-        //}
+        if (Arrays.asList(args).contains("debug")) {
+            var root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+            var jdaLogger = (Logger) LoggerFactory.getLogger("net.dv8tion");
+            var cpLogger = (Logger) LoggerFactory.getLogger("com.zaxxer.hikari");
+            root.setLevel(Level.DEBUG);
+            jdaLogger.setLevel(Level.DEBUG);
+            cpLogger.setLevel(Level.DEBUG);
+        }
 
 
         new NeoBotLauncher();
