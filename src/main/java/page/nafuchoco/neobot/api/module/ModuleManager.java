@@ -127,7 +127,8 @@ public class ModuleManager {
             return false;
         }
 
-        additionalIntents.addAll(module.getDescription().getAdditionalIntents());
+        if (module.getDescription().getAdditionalIntents() != null)
+            additionalIntents.addAll(module.getDescription().getAdditionalIntents());
 
         try {
             module.onLoad();
