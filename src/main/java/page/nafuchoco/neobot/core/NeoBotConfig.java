@@ -19,6 +19,7 @@ package page.nafuchoco.neobot.core;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
+import page.nafuchoco.neobot.api.DatabaseType;
 
 @Getter
 @ToString

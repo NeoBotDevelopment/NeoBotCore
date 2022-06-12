@@ -18,7 +18,6 @@ package page.nafuchoco.neobot.api;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import page.nafuchoco.neobot.core.DatabaseType;
 
 import java.sql.Connection;
 import java.sql.SQLException;

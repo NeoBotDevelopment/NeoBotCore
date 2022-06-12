@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package page.nafuchoco.neobot.core;
+package page.nafuchoco.neobot.api;
 
 public enum DatabaseType {
     MARIADB("org.mariadb.jdbc.Driver", "jdbc:mariadb://"),

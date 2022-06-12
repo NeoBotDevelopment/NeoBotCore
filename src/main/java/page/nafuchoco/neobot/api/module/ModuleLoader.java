@@ -85,7 +85,7 @@ public class ModuleLoader {
         log.info("Loading {} v{}", description.getName(), description.getVersion());
 
         if (!ModuleVersionChecker.isNew(description.getRequiredVersion(), launcher.getVersion()))
-            throw new InvalidModuleException("The current version of NeoJukePro in use is unavailable because it falls below the version required by the module.");
+            throw new InvalidModuleException("The current version of NeoBotCore in use is unavailable because it falls below the version required by the module.");
 
         if (!CollectionUtils.isEmpty(description.getDependency())) {
             for (String dep : description.getDependency()) {
