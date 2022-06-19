@@ -1,6 +1,7 @@
 # NeoBotCore
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/NeoBotDevelopment/NeoBotCore)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/NeoBotDevelopment/NeoBotCore?include_prereleases&label=pre-release)
 ![GitHub](https://img.shields.io/github/license/NeoBotDevelopment/NeoBotCore)
 [![Java CI with Gradle](https://github.com/NeoBotDevelopment/NeoBotCore/actions/workflows/gradle.yml/badge.svg?branch=master)](https://github.com/NeoBotDevelopment/NeoBotCore/actions/workflows/gradle.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/8cf0684208914a45a40359842a9c7f74)](https://www.codacy.com/gh/NeoBotDevelopment/NeoBotCore/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=NeoBotDevelopment/NeoBotCore&amp;utm_campaign=Badge_Grade)
