@@ -30,7 +30,7 @@ public abstract class NeoModule implements Module {
     private NeoModuleLogger logger;
     private boolean isEnabled;
 
-    public NeoModule() {
+    protected NeoModule() {
         classLoader = this.getClass().getClassLoader();
         if (!(classLoader instanceof ModuleClassLoader))
             throw new IllegalStateException("The module must be loaded with a \"ModuleClassLoader\".");

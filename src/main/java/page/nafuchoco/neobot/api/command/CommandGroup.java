@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class CommandGroup {
     private final String groupName;
@@ -71,7 +70,7 @@ public class CommandGroup {
     }
 
     public List<CommandExecutor> getCommands() {
-        return executors.values().stream().flatMap(v -> v.values().stream()).distinct().collect(Collectors.toList());
+        return executors.values().stream().flatMap(v -> v.values().stream()).distinct().toList();
     }
 
     public CommandExecutor getExecutor(String name) {

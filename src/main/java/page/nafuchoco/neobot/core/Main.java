@@ -49,14 +49,13 @@ public final class Main {
             var console = new Scanner(System.in);
             while (true) {
                 switch (console.nextLine()) {
-                    case "exit":
-                    case "stop":
+                    case "exit", "stop":
                         Runtime.getRuntime().exit(0);
                         break;
 
                     case "threadList":
                         for (Thread thread : Thread.getAllStackTraces().keySet()) {
-                            log.debug("Found active thread: {} ({})", thread, thread.getClass().getClassLoader());
+                            log.info("Found active thread: {} ({})", thread, thread.getClass().getClassLoader());
                         }
                         break;
                 }

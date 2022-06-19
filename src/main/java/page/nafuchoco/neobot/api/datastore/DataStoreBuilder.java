@@ -24,8 +24,8 @@ import java.util.Map;
 
 public class DataStoreBuilder {
     private final DatabaseConnector connector;
-    private String storeName;
     private final Map<String, Class> indexes;
+    private String storeName;
 
     protected DataStoreBuilder(DatabaseConnector connector) {
         this.connector = connector;

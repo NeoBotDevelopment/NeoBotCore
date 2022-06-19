@@ -34,17 +34,15 @@ import java.util.List;
 
 @Slf4j
 public class ModuleManager {
-    private final Launcher launcher;
     private final ModuleRegistry moduleRegistry;
     private final ModuleLoader moduleLoader;
     private final List<File> files;
     private final List<GatewayIntent> additionalIntents;
 
     public ModuleManager(Launcher launcher, String moduleDir) {
-        this.launcher = launcher;
         this.moduleRegistry = new ModuleRegistry();
         moduleLoader = new ModuleLoader(launcher, moduleRegistry, moduleDir);
-        files = moduleLoader.searchModules();
+        files = new ArrayList<>(moduleLoader.searchModules());
         additionalIntents = new ArrayList<>();
     }
 

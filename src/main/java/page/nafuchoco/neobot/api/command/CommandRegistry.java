@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class CommandRegistry extends CommandRegistrar {
@@ -72,7 +71,7 @@ public class CommandRegistry extends CommandRegistrar {
     }
 
     public void deleteCommandGroup(CommandGroup commandGroup) {
-        groups.remove(commandGroup);
+        groups.remove(commandGroup.getGroupName());
     }
 
     public List<CommandGroup> getCommandGroups() {
@@ -84,7 +83,7 @@ public class CommandRegistry extends CommandRegistrar {
     }
 
     public List<CommandExecutor> getCommands() {
-        return groups.values().stream().flatMap(v -> v.getCommands().stream()).distinct().collect(Collectors.toList());
+        return groups.values().stream().flatMap(v -> v.getCommands().stream()).distinct().toList();
     }
 
     public CommandGroup getCommandGroup(String groupName) {

@@ -17,6 +17,7 @@
 package page.nafuchoco.neobot.api.datastore;
 
 import page.nafuchoco.neobot.api.DatabaseConnector;
+import page.nafuchoco.neobot.api.datastore.exception.DataStoreException;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -88,7 +89,7 @@ public class DataStore {
             ps.setLong(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataStoreException(e);
         }
     }
 
@@ -104,7 +105,7 @@ public class DataStore {
                 return null;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataStoreException(e);
         }
     }
 
@@ -128,7 +129,7 @@ public class DataStore {
             }
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataStoreException(e);
         }
     }
 
@@ -140,7 +141,7 @@ public class DataStore {
             ps.setLong(2, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataStoreException(e);
         }
     }
 }

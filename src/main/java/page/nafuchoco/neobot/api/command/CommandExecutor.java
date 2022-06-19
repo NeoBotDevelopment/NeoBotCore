@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class CommandExecutor implements ICommandExecutor {
     private final List<CommandOption> options = new ArrayList<>();
@@ -40,18 +39,28 @@ public abstract class CommandExecutor implements ICommandExecutor {
         return options;
     }
 
+    /**
+     * Returns an immutable list of registered {@link CommandValueOption}.
+     *
+     * @return Immutable list of registered {@link CommandValueOption}
+     */
     public List<CommandValueOption> getValueOptions() {
         return options.stream()
                 .filter(CommandValueOption.class::isInstance)
                 .map(CommandValueOption.class::cast)
-                .collect(Collectors.toList());
+                .toList();
     }
 
+    /**
+     * Returns an immutable list of registered {@link SubCommandOption}.
+     *
+     * @return Immutable list of registered {@link SubCommandOption}
+     */
     public List<SubCommandOption> getSubCommands() {
         return options.stream()
                 .filter(SubCommandOption.class::isInstance)
                 .map(SubCommandOption.class::cast)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

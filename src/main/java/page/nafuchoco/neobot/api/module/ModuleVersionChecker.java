@@ -26,6 +26,10 @@ public class ModuleVersionChecker {
                     "(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))" +
                     "?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$");
 
+    private ModuleVersionChecker() {
+        throw new IllegalStateException();
+    }
+
     /**
      * Compares the two modules and returns true if arg2 is new.
      *

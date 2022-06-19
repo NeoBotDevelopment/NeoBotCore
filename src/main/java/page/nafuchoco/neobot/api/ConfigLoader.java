@@ -30,6 +30,10 @@ import java.io.IOException;
 public class ConfigLoader {
     private static final ObjectMapper MAPPER = new ObjectMapper(new YAMLFactory());
 
+    private ConfigLoader() {
+        throw new IllegalStateException();
+    }
+
     public static <T> T loadConfig(@NotNull File configurationFile, Class<T> clazz) {
         try (var configInput = new FileInputStream(configurationFile)) {
             return MAPPER.readValue(configInput, clazz);

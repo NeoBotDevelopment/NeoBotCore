@@ -23,6 +23,10 @@ import page.nafuchoco.neobot.api.module.ModuleManager;
 
 public final class NeoBot {
 
+    private NeoBot() {
+        throw new IllegalStateException();
+    }
+
     private static Launcher launcher;
 
     public static Launcher getLauncher() {
