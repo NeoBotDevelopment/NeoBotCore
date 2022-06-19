@@ -60,7 +60,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'ch.qos.logback:logback-core:1.2.11'
     implementation 'ch.qos.logback:logback-classic:1.2.11'
-    implementation 'io.sentry:sentry-logback:5.7.4'
+    implementation 'io.sentry:sentry-logback:6.0.0'
 
     // ClientLib
     api('net.dv8tion:JDA:5.0.0-alpha.12') {
@@ -81,7 +81,7 @@ dependencies {
     // SQL
     implementation 'com.zaxxer:HikariCP:5.0.1'
     implementation 'mysql:mysql-connector-java:8.0.29'
-    implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.4'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.5'
 
     // Other
     implementation 'de.vandermeer:asciitable:0.3.2'
