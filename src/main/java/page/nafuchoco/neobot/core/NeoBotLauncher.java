@@ -32,6 +32,9 @@ import page.nafuchoco.neobot.api.NeoBot;
 import page.nafuchoco.neobot.api.command.SlashCommandEventHandler;
 import page.nafuchoco.neobot.api.datastore.DataStoreManager;
 import page.nafuchoco.neobot.api.module.ModuleManager;
+import page.nafuchoco.neobot.core.console.ConsoleCommandRegistry;
+import page.nafuchoco.neobot.core.console.executor.StopCommand;
+import page.nafuchoco.neobot.core.console.executor.ThreadListCommand;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -47,12 +50,17 @@ public final class NeoBotLauncher implements Launcher {
     private final DataStoreManager dataStoreManager;
     private final ShardManager discordApi;
     private final DefaultCommandRegistry commandRegistry = new DefaultCommandRegistry(this);
+    private final ConsoleCommandRegistry consoleCommandRegistry = new ConsoleCommandRegistry();
     private final ModuleManager moduleManager = new ModuleManager(this, "modules");
 
     public NeoBotLauncher() {
         version = NeoBotLauncher.class.getPackage().getImplementationVersion();
         NeoBot.setLauncher(this);
         log.info(getSystemInfo());
+
+        // Register console command
+        getConsoleCommandRegistry().registerCommand(new StopCommand("stop", "exit", "shutdown"), null);
+        getConsoleCommandRegistry().registerCommand(new ThreadListCommand("thread"), null);
 
         // load configuration
         var configurationFile = new File("NeoBotCore.yaml");
@@ -184,5 +192,9 @@ public final class NeoBotLauncher implements Launcher {
     @Override
     public void queueCommandRegister() {
         commandRegistry.queue();
+    }
+
+    public ConsoleCommandRegistry getConsoleCommandRegistry() {
+        return consoleCommandRegistry;
     }
 }

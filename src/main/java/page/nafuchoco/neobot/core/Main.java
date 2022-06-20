@@ -20,6 +20,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
+import page.nafuchoco.neobot.core.console.ConsoleCommandParser;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -42,23 +43,16 @@ public final class Main {
         }
 
 
-        new NeoBotLauncher();
+        NeoBotLauncher launcher = new NeoBotLauncher();
         log.info("Done! ({}s)", (double) (System.currentTimeMillis() - startTime) / 1000);
+
+        ConsoleCommandParser commandParser = new ConsoleCommandParser(launcher.getConsoleCommandRegistry());
 
         new Thread(() -> {
             var console = new Scanner(System.in);
             while (true) {
-                switch (console.nextLine()) {
-                    case "exit", "stop":
-                        Runtime.getRuntime().exit(0);
-                        break;
-
-                    case "threadList":
-                        for (Thread thread : Thread.getAllStackTraces().keySet()) {
-                            log.info("Found active thread: {} ({})", thread, thread.getClass().getClassLoader());
-                        }
-                        break;
-                }
+                if (commandParser != null)
+                    commandParser.fireCommand(console.nextLine());
             }
         }).start();
     }
