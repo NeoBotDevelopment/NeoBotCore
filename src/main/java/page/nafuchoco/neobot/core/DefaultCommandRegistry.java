@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package page.nafuchoco.neobot.api.command;
+package page.nafuchoco.neobot.core;
 
 import lombok.extern.slf4j.Slf4j;
 import page.nafuchoco.neobot.api.Launcher;
+import page.nafuchoco.neobot.api.command.CommandExecutor;
+import page.nafuchoco.neobot.api.command.CommandGroup;
+import page.nafuchoco.neobot.api.command.ICommandRegistry;
 import page.nafuchoco.neobot.api.module.NeoModule;
-import page.nafuchoco.neobot.core.CommandRegistrar;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -27,17 +29,19 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class CommandRegistry extends CommandRegistrar {
+public class DefaultCommandRegistry extends CommandRegistrar implements ICommandRegistry {
     private final Map<String, CommandGroup> groups = new LinkedHashMap<>();
 
-    public CommandRegistry(Launcher launcher) {
+    public DefaultCommandRegistry(Launcher launcher) {
         super(launcher);
     }
 
+    @Override
     public void registerCommand(CommandExecutor executor, NeoModule module) {
         registerCommand(executor, null, module);
     }
 
+    @Override
     public void registerCommand(CommandExecutor executor, String groupName, NeoModule module) {
         log.debug("Register command: {}", executor.getName());
         for (CommandGroup g : groups.values()) {
@@ -51,45 +55,55 @@ public class CommandRegistry extends CommandRegistrar {
         registerCommandToDiscord(executor);
     }
 
+    @Override
     public void removeCommand(String name, NeoModule module) {
         for (CommandGroup g : groups.values())
             g.removeCommand(name, module);
     }
 
+    @Override
     public void removeCommand(CommandExecutor executor, NeoModule module) {
         for (CommandGroup g : groups.values())
             g.removeCommand(executor, module);
     }
 
+    @Override
     public void removeCommands(NeoModule module) {
         for (CommandGroup g : groups.values())
             g.removeCommands(module);
     }
 
+    @Override
     public void deleteCommandGroup(String groupName) {
         groups.remove(groupName);
     }
 
+    @Override
     public void deleteCommandGroup(CommandGroup commandGroup) {
         groups.remove(commandGroup.getGroupName());
     }
 
+    @Override
     public List<CommandGroup> getCommandGroups() {
         return new ArrayList<>(groups.values());
     }
 
+    @Override
     public List<String> getCommandGroupsNames() {
         return new ArrayList<>(groups.keySet());
     }
 
+    @Override
     public List<CommandExecutor> getCommands() {
         return groups.values().stream().flatMap(v -> v.getCommands().stream()).distinct().toList();
     }
 
+    @Override
     public CommandGroup getCommandGroup(String groupName) {
         return groups.get(groupName);
     }
 
+    @Override
     public CommandExecutor getExecutor(String name) {
         CommandExecutor executor = null;
         List<CommandGroup> groupList = new ArrayList<>(groups.values());

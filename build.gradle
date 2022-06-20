@@ -63,9 +63,7 @@ dependencies {
     implementation 'io.sentry:sentry-logback:6.0.0'
 
     // ClientLib
-    api('net.dv8tion:JDA:5.0.0-alpha.12') {
-        exclude module: 'opus-java'
-    }
+    api 'com.github.NeoBotDevelopment:NeoBotApi:master-SNAPSHOT'
 
     // Parser
     implementation 'com.google.code.gson:gson:2.9.0'

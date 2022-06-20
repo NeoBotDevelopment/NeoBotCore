@@ -6,9 +6,11 @@
 [![Java CI with Gradle](https://github.com/NeoBotDevelopment/NeoBotCore/actions/workflows/gradle.yml/badge.svg?branch=master)](https://github.com/NeoBotDevelopment/NeoBotCore/actions/workflows/gradle.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/8cf0684208914a45a40359842a9c7f74)](https://www.codacy.com/gh/NeoBotDevelopment/NeoBotCore/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=NeoBotDevelopment/NeoBotCore&amp;utm_campaign=Badge_Grade)
 
-NeoBotCore is an extensible Discord Bot created using Java.  
-You can add any functionality by adding modules of your choice.  
-The program itself does not have much functionality and is intended to be used like a framework.
+A NeoBotCore is an implementation of the NeoBotAPI.
+
+NeoBot is an extensible Discord Bot developed using Java.  
+By combining modules, you can create a single Discord Bot best suited for your use.  
+Also, by developing functions as modules, you can develop a Discord Bot in less time than starting from zero.
 
 ## Operation requirements
 

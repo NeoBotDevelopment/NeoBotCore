@@ -29,7 +29,6 @@ import page.nafuchoco.neobot.api.ConfigLoader;
 import page.nafuchoco.neobot.api.DatabaseConnector;
 import page.nafuchoco.neobot.api.Launcher;
 import page.nafuchoco.neobot.api.NeoBot;
-import page.nafuchoco.neobot.api.command.CommandRegistry;
 import page.nafuchoco.neobot.api.command.SlashCommandEventHandler;
 import page.nafuchoco.neobot.api.datastore.DataStoreManager;
 import page.nafuchoco.neobot.api.module.ModuleManager;
@@ -47,7 +46,7 @@ public final class NeoBotLauncher implements Launcher {
     private final DatabaseConnector databaseConnector;
     private final DataStoreManager dataStoreManager;
     private final ShardManager discordApi;
-    private final CommandRegistry commandRegistry = new CommandRegistry(this);
+    private final DefaultCommandRegistry commandRegistry = new DefaultCommandRegistry(this);
     private final ModuleManager moduleManager = new ModuleManager(this, "modules");
 
     public NeoBotLauncher() {
@@ -168,7 +167,7 @@ public final class NeoBotLauncher implements Launcher {
     }
 
     @Override
-    public CommandRegistry getCommandRegistry() {
+    public DefaultCommandRegistry getCommandRegistry() {
         return commandRegistry;
     }
 
