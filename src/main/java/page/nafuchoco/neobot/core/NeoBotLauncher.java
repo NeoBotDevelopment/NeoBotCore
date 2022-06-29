@@ -35,6 +35,8 @@ import page.nafuchoco.neobot.api.module.ModuleManager;
 import page.nafuchoco.neobot.core.console.ConsoleCommandRegistry;
 import page.nafuchoco.neobot.core.console.executor.StopCommand;
 import page.nafuchoco.neobot.core.console.executor.ThreadListCommand;
+import page.nafuchoco.neobot.core.executor.ModuleCommand;
+import page.nafuchoco.neobot.core.executor.SystemCommand;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -124,7 +126,15 @@ public final class NeoBotLauncher implements Launcher {
         log.debug("Ping! {}ms", discordApi.getAverageGatewayPing());
         discordApi.setPresence(OnlineStatus.INVISIBLE, null);
 
+        // Register system command
+        getCommandRegistry().registerCommand(new SystemCommand("system"), null);
+        getCommandRegistry().registerCommand(new ModuleCommand("module"), null);
+
+        // enable all modules
         moduleManager.enableAllModules();
+        commandRegistry.queue();
+
+        // All done!
         discordApi.setPresence(OnlineStatus.ONLINE, null);
 
         // register shutdown hook
