@@ -51,6 +51,7 @@ publishing {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven { url 'https://jitpack.io' }
     maven { url 'https://m2.dv8tion.net/releases' }
 }
@@ -63,7 +64,8 @@ dependencies {
     implementation 'io.sentry:sentry-logback:6.0.0'
 
     // ClientLib
-    api 'com.github.NeoBotDevelopment:NeoBotApi:master-SNAPSHOT'
+    api 'com.github.NeoBotDevelopment:NeoBotApi:develop-SNAPSHOT'
+    //api 'page.nafuchoco:NeoBotApi:1.1.0-SNAPSHOT' // Dependency for Development
 
     // Parser
     implementation 'com.google.code.gson:gson:2.9.0'
