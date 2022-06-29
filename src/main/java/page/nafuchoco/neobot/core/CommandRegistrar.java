@@ -19,6 +19,7 @@ package page.nafuchoco.neobot.core;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -27,6 +28,7 @@ import page.nafuchoco.neobot.api.Launcher;
 import page.nafuchoco.neobot.api.command.CommandExecutor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -35,21 +37,46 @@ public abstract class CommandRegistrar {
 
     private CommandListUpdateAction updateAction;
     private List<Command> registeredCommands = new ArrayList<>();
+    private boolean globalCommandListUpdated = false;
 
     protected CommandRegistrar(Launcher launcher) {
         this.launcher = launcher;
     }
 
     protected void registerCommandToDiscord(CommandExecutor executor) {
-        if (updateAction == null)
-            updateAction = launcher.getDiscordApi().getShardById(0).updateCommands();
-
         val command = Commands.slash(executor.getName(), executor.getDescription());
-        addCommandOptions(executor, command);
-        updateAction.addCommands(command);
+        addCommandOptions(command, executor);
+        addCommands(command);
     }
 
-    private void addCommandOptions(CommandExecutor executor, SlashCommandData command) {
+    protected void unregisterCommandFromDiscord(CommandExecutor executor) {
+        if (executor == null)
+            return;
+
+        if (globalCommandListUpdated) {
+            var commandData = registeredCommands.stream().filter(command -> executor.getName().equals(command.getName())).findFirst().orElse(null);
+            if (commandData != null) {
+                launcher.getDiscordApi().getShardById(0).deleteCommandById(commandData.getId()).queue();
+            }
+        } else {
+            throw new IllegalStateException("Global command list has not been updated yet.");
+        }
+    }
+
+    private void addCommands(CommandData... commands) {
+        if (globalCommandListUpdated) {
+            Arrays.stream(commands).forEach(command -> {
+                launcher.getDiscordApi().getShardById(0).upsertCommand(command).queue(reg -> registeredCommands.add(reg));
+            });
+        } else {
+            if (updateAction == null)
+                updateAction = launcher.getDiscordApi().getShardById(0).updateCommands();
+
+            updateAction.addCommands(commands);
+        }
+    }
+
+    private void addCommandOptions(SlashCommandData command, CommandExecutor executor) {
         executor.getValueOptions().forEach(option -> command.addOption(option.optionType(), option.optionName(), option.optionDescription(), option.required(), option.autoComplete()));
         executor.getSubCommands().forEach(sub -> {
             val subCommand = new SubcommandData(sub.optionName(), sub.optionDescription());
@@ -59,8 +86,9 @@ public abstract class CommandRegistrar {
     }
 
     protected void queue() {
-        updateAction.queue(commands -> registeredCommands = commands);
+        updateAction.queue(commands -> registeredCommands = new ArrayList<>(commands));
         updateAction = null;
+        globalCommandListUpdated = true;
     }
 
     protected List<Command> getRegisteredCommands() {

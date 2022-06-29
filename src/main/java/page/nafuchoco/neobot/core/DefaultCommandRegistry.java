@@ -58,29 +58,33 @@ public class DefaultCommandRegistry extends CommandRegistrar implements ICommand
     @Override
     public void removeCommand(String name, NeoModule module) {
         for (CommandGroup g : groups.values())
-            g.removeCommand(name, module);
+            unregisterCommandFromDiscord(g.removeCommand(name, module));
     }
 
     @Override
     public void removeCommand(CommandExecutor executor, NeoModule module) {
         for (CommandGroup g : groups.values())
             g.removeCommand(executor, module);
+        unregisterCommandFromDiscord(executor);
     }
 
     @Override
     public void removeCommands(NeoModule module) {
         for (CommandGroup g : groups.values())
-            g.removeCommands(module);
+            g.removeCommands(module).forEach(this::unregisterCommandFromDiscord);
     }
 
     @Override
     public void deleteCommandGroup(String groupName) {
-        groups.remove(groupName);
+        CommandGroup group = groups.remove(groupName);
+        if (group != null)
+            group.getCommands().forEach(this::unregisterCommandFromDiscord);
+
     }
 
     @Override
     public void deleteCommandGroup(CommandGroup commandGroup) {
-        groups.remove(commandGroup.getGroupName());
+        groups.remove(commandGroup.getGroupName()).getCommands().forEach(this::unregisterCommandFromDiscord);
     }
 
     @Override

@@ -191,7 +191,7 @@ public final class NeoBotLauncher implements Launcher {
 
     @Override
     public void queueCommandRegister() {
-        commandRegistry.queue();
+        // do nothing
     }
 
     public ConsoleCommandRegistry getConsoleCommandRegistry() {
