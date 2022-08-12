@@ -64,7 +64,7 @@ dependencies {
     implementation 'io.sentry:sentry-logback:6.0.0'
 
     // ClientLib
-    api 'com.github.NeoBotDevelopment:NeoBotApi:develop-SNAPSHOT'
+    api 'com.github.NeoBotDevelopment:NeoBotApi:1.1.0'
     //api 'page.nafuchoco:NeoBotApi:1.1.0-SNAPSHOT' // Dependency for Development
 
     // Parser
@@ -80,8 +80,8 @@ dependencies {
 
     // SQL
     implementation 'com.zaxxer:HikariCP:5.0.1'
-    implementation 'mysql:mysql-connector-java:8.0.29'
-    implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.5'
+    implementation 'mysql:mysql-connector-java:8.0.30'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.6'
 
     // Other
     implementation 'de.vandermeer:asciitable:0.3.2'
