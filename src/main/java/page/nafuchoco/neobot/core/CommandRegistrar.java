@@ -57,6 +57,7 @@ public abstract class CommandRegistrar {
             var commandData = registeredCommands.stream().filter(command -> executor.getName().equals(command.getName())).findFirst().orElse(null);
             if (commandData != null) {
                 launcher.getDiscordApi().getShardById(0).deleteCommandById(commandData.getId()).queue();
+                registeredCommands.remove(commandData);
             }
         } else {
             throw new IllegalStateException("Global command list has not been updated yet.");
