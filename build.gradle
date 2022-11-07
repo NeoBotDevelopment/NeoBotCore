@@ -68,7 +68,7 @@ dependencies {
     //api 'page.nafuchoco:NeoBotApi:1.1.0-SNAPSHOT' // Dependency for Development
 
     // Parser
-    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.10'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.3'
