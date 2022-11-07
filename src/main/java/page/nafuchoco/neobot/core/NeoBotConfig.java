@@ -27,9 +27,6 @@ public class NeoBotConfig {
     @JsonProperty("basic")
     private BasicConfigSection basicConfig;
 
-    @JsonProperty("sentryDsn")
-    private String sentryDsn;
-
     @Getter
     @ToString
     public static class BasicConfigSection {

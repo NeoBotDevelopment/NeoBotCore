@@ -17,6 +17,3 @@ basic: # This is the configuration required to use this bot.
     database: NeoBotCore
     username: NeoBotCore
     password: PaSsWoRd
-
-# --- --- --- --- #
-sentryDsn: ""

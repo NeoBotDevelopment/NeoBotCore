@@ -16,15 +16,12 @@
 
 package page.nafuchoco.neobot.core;
 
-import io.sentry.Sentry;
-import io.sentry.SentryOptions;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import org.apache.commons.lang3.StringUtils;
 import page.nafuchoco.neobot.api.ConfigLoader;
 import page.nafuchoco.neobot.api.DatabaseConnector;
 import page.nafuchoco.neobot.api.Launcher;
@@ -80,13 +77,6 @@ public final class NeoBotLauncher implements Launcher {
         }
 
         configration = ConfigLoader.loadConfig(configurationFile, NeoBotConfig.class);
-
-        // setup sentry for error reporting
-        if (!StringUtils.isEmpty(configration.getSentryDsn())) {
-            var options = new SentryOptions();
-            options.setDsn(configration.getSentryDsn());
-            Sentry.init(options);
-        }
 
         // start connection to database
         log.info("Start a connection to the database.");
