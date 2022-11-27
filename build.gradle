@@ -78,7 +78,7 @@ dependencies {
 
     // SQL
     implementation 'mysql:mysql-connector-java:8.0.31'
-    implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.6'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.0'
 
     // Other
     implementation 'de.vandermeer:asciitable:0.3.2'
