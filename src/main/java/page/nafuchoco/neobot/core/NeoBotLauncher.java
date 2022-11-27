@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.exceptions.InvalidTokenException;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import page.nafuchoco.neobot.api.ConfigLoader;
@@ -32,10 +33,10 @@ import page.nafuchoco.neobot.api.module.ModuleManager;
 import page.nafuchoco.neobot.core.console.ConsoleCommandRegistry;
 import page.nafuchoco.neobot.core.console.executor.StopCommand;
 import page.nafuchoco.neobot.core.console.executor.ThreadListCommand;
+import page.nafuchoco.neobot.core.datastore.DefaultDataStoreManager;
 import page.nafuchoco.neobot.core.executor.ModuleCommand;
 import page.nafuchoco.neobot.core.executor.SystemCommand;
 
-import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,7 +88,7 @@ public final class NeoBotLauncher implements Launcher {
                 configration.getBasicConfig().getDatabase().getPassword());
         databaseConnector.setPrefix(configration.getBasicConfig().getDatabase().getTablePrefix());
 
-        dataStoreManager = new DataStoreManager(databaseConnector);
+        dataStoreManager = new DefaultDataStoreManager(databaseConnector);
 
         moduleManager.loadAllModules();
 
@@ -103,7 +104,7 @@ public final class NeoBotLauncher implements Launcher {
             shardManager = shardManagerBuilder.build();
             while (!shardManager.getStatus(0).equals(JDA.Status.CONNECTED))
                 Thread.sleep(100);
-        } catch (LoginException e) {
+        } catch (InvalidTokenException e) {
             log.error("Failed to authenticate the connection of the Discord API.", e);
             Runtime.getRuntime().exit(1);
         } catch (InterruptedException e) {
