@@ -26,7 +26,7 @@ public class SystemCommand extends CommandExecutor {
         val shardManager = commandContext.getLauncher().getDiscordApi();
 
         val builder = new StringBuilder();
-        builder.append("This Bot has been running for " + formatTime(uptime) + " since it was started.\n");
+        builder.append("This Bot has been running for ").append(formatTime(uptime)).append(" since it was started.\n");
         builder.append("```\n");
         builder.append("====== System Info ======\n");
         builder.append("Operating System:      ").append(System.getProperty("os.name")).append("\n");
