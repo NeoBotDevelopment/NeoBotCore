@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'java-library'
     id 'maven-publish'
-    id "io.freefair.lombok" version "6.4.3.1"
+    id "io.freefair.lombok" version "6.6"
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
@@ -67,9 +67,9 @@ dependencies {
 
     // Parser
     implementation 'com.google.code.gson:gson:2.10'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.1'
 
     // Commons Library
     implementation 'commons-io:commons-io:2.11.0'
