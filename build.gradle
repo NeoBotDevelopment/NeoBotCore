@@ -63,7 +63,7 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.4.5'
 
     // ClientLib
-    api 'com.github.NeoBotDevelopment:NeoBotApi:2.0.0-alpha.1'
+    api 'com.github.NeoBotDevelopment:NeoBotApi:2.0.0-alpha.2'
 
     // Parser
     implementation 'com.google.code.gson:gson:2.10'
