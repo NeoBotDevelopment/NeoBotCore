@@ -23,9 +23,9 @@ import page.nafuchoco.neobot.api.datastore.DataStoreBuilder;
 import page.nafuchoco.neobot.api.datastore.exception.DataStoreGenerateException;
 
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+
+import static org.apache.commons.lang3.CharSetUtils.count;
 
 public class DefaultDataStoreBuilder implements DataStoreBuilder {
     private final DatabaseConnector connector;
@@ -56,13 +56,49 @@ public class DefaultDataStoreBuilder implements DataStoreBuilder {
         indexMap.putAll(indexes);
 
         // create database tables corresponding to the data store.
-        try (var connection = connector.getConnection();
-             var createTableStatement = connection.prepareStatement(generateCreateTableStatement(indexMap))) {
-            createTableStatement.execute();
+        try (var connection = connector.getConnection()) {
+            // check if the table exists.
+            try (var checkTableStatement = connection.prepareStatement("SELECT * FROM information_schema.TABLES WHERE TABLE_NAME = ?;")) {
+                checkTableStatement.setString(1, connector.getPrefix() + storeName);
+                var result = checkTableStatement.executeQuery();
 
-            // set unique index for the guild id.
-            try (var createIndexStatement = connection.prepareStatement("CREATE UNIQUE INDEX IF NOT EXISTS " + storeName + "_id ON " + connector.getPrefix() + storeName + "(id)")) {
-                createIndexStatement.execute();
+                if (result.getFetchSize() > 0) { // if the table exists, check if the index is correct.
+                    List<String> columnNames = new ArrayList<>();
+                    try (var columnsShowStatement = connection.prepareStatement("SHOW COLUMNS FROM " + connector.getPrefix() + storeName)) {
+                        var columnsInfoResult = columnsShowStatement.executeQuery();
+                        while (columnsInfoResult.next()) {
+                            columnNames.add(columnsInfoResult.getString("Field"));
+                        }
+                    }
+
+                    // Checks for non-matching items to determine if they should be added or deleted.
+                    List<String> addColumns = new ArrayList<>();
+                    for (var index : indexMap.entrySet()) {
+                        if (!columnNames.contains(index.getKey())) {
+                            addColumns.add(index.getKey());
+                        }
+                    }
+                    List<String> deleteColumns = new ArrayList<>();
+                    for (var columnName : columnNames) {
+                        if (!indexMap.containsKey(columnName)) {
+                            deleteColumns.add(columnName);
+                        }
+                    }
+
+                    // Alter the table to add or delete columns.
+                    try (var createTableStatement = connection.prepareStatement(generateAlterTableStatement(addColumns, deleteColumns))) {
+                        createTableStatement.execute();
+                    }
+                } else { // if the table does not exist, create a new table.
+                    try (var createTableStatement = connection.prepareStatement(generateCreateTableStatement(indexMap))) {
+                        createTableStatement.execute();
+
+                        // set unique index for the guild id.
+                        try (var createIndexStatement = connection.prepareStatement("CREATE UNIQUE INDEX IF NOT EXISTS " + storeName + "_id ON " + connector.getPrefix() + storeName + "(id)")) {
+                            createIndexStatement.execute();
+                        }
+                    }
+                }
             }
         } catch (SQLException e) {
             throw new DataStoreGenerateException(e);
@@ -119,6 +155,22 @@ public class DefaultDataStoreBuilder implements DataStoreBuilder {
             sb.append(toSnakeCase(entry.getKey())).append(" ").append(getTypeString(entry.getValue())).append(", ");
         }
         sb.delete(sb.length() - 2, sb.length()).append(")");
+        return sb.toString();
+    }
+
+    /**
+     * Generate an alterTable statement from a add column list and a delete column list.
+     */
+    private String generateAlterTableStatement(List<String> addColumns, List<String> deleteColumns) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(connector.getPrefix()).append(storeName).append(" ");
+        for (String addColumn : addColumns) {
+            sb.append("ADD COLUMN ").append(toSnakeCase(addColumn)).append(" ").append(getTypeString(indexes.get(addColumn))).append(", ");
+        }
+        for (String deleteColumn : deleteColumns) {
+            sb.append("DROP COLUMN ").append(toSnakeCase(deleteColumn)).append(", ");
+        }
+        sb.delete(sb.length() - 2, sb.length());
         return sb.toString();
     }
 
