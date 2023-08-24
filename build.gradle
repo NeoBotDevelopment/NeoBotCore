@@ -2,8 +2,8 @@ plugins {
     id 'java'
     id 'java-library'
     id 'maven-publish'
-    id "io.freefair.lombok" version "6.6.3"
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id "io.freefair.lombok" version "8.2.2"
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group 'page.nafuchoco'
@@ -63,22 +63,23 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.4.6'
 
     // ClientLib
-    api 'com.github.NeoBotDevelopment:NeoBotApi:2.0.0-alpha.3'
+    api 'com.github.NeoBotDevelopment:NeoBotApi:2.0.0-alpha.5'
 
     // Parser
     implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.2'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2'
 
     // Commons Library
-    implementation 'commons-io:commons-io:2.11.0'
-    implementation 'commons-codec:commons-codec:1.15'
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'commons-io:commons-io:2.13.0'
+    implementation 'commons-codec:commons-codec:1.16.0'
+    implementation 'org.apache.commons:commons-lang3:3.13.0'
 
     // SQL
-    implementation 'mysql:mysql-connector-java:8.0.32'
-    implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.2'
+    implementation 'com.mysql:mysql-connector-j:8.1.0'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+    implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
 
     // Other
     implementation 'de.vandermeer:asciitable:0.3.2'
