@@ -19,10 +19,7 @@ package page.nafuchoco.neobot.core;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import page.nafuchoco.neobot.api.Launcher;
 import page.nafuchoco.neobot.api.command.CommandExecutor;
@@ -78,7 +75,18 @@ public abstract class CommandRegistrar {
     }
 
     private void addCommandOptions(SlashCommandData command, CommandExecutor executor) {
-        executor.getValueOptions().forEach(option -> command.addOption(option.optionType(), option.optionName(), option.optionDescription(), option.required(), option.autoComplete()));
+        executor.getValueOptions().stream().map(option -> {
+                    val optionData = new OptionData(option.optionType(), option.optionName(), option.optionDescription(), option.required(), option.autoComplete());
+                    if (!option.getChoices().isEmpty()) {
+                        switch (option.optionType()) {
+                            case STRING -> option.getChoices().forEach((key, value) -> optionData.addChoice(key, (String) value));
+                            case INTEGER -> option.getChoices().forEach((key, value) -> optionData.addChoice(key, (Long) value));
+                            case NUMBER -> option.getChoices().forEach((key, value) -> optionData.addChoice(key, (Double) value));
+                            default -> throw new IllegalStateException("Unexpected value: " + option.optionType());
+                        }
+                    }
+                    return optionData;
+                }).forEach(command::addOptions);
         executor.getSubCommands().forEach(sub -> {
             val subCommand = new SubcommandData(sub.optionName(), sub.optionDescription());
             sub.getValueOptions().forEach(option -> subCommand.addOption(option.optionType(), option.optionName(), option.optionDescription(), option.required(), option.autoComplete()));
