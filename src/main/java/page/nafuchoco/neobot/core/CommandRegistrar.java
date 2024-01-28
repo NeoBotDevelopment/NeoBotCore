@@ -18,70 +18,95 @@ package page.nafuchoco.neobot.core;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import page.nafuchoco.neobot.api.Launcher;
 import page.nafuchoco.neobot.api.command.CommandExecutor;
+import page.nafuchoco.neobot.api.command.CommandValueOption;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 public abstract class CommandRegistrar {
     private final Launcher launcher;
 
-    private CommandListUpdateAction updateAction;
-    private List<Command> registeredCommands = new ArrayList<>();
-    private boolean globalCommandListUpdated = false;
+    private CommandListUpdateAction globalUpdateAction;
+    private final Map<Long, CommandListUpdateAction> guildUpdateActions = new HashMap<>();
+    private final Map<Long, List<Command>> registeredCommands = new HashMap<>();
+    private boolean commandListUpdated = false;
 
     protected CommandRegistrar(Launcher launcher) {
         this.launcher = launcher;
+        registeredCommands.put(null, new ArrayList<>());
     }
 
-    protected void registerCommandToDiscord(CommandExecutor executor) {
+    protected void registerCommandToDiscord(CommandExecutor executor, Guild guild) {
         val command = Commands.slash(executor.getName(), executor.getDescription());
         addCommandOptions(command, executor);
-        addCommands(command);
+        addCommands(guild, command);
     }
 
-    protected void unregisterCommandFromDiscord(CommandExecutor executor) {
+    protected void unregisterCommandFromDiscord(@NotNull CommandExecutor executor, @Nullable Guild guild) {
         if (executor == null)
             return;
 
-        if (globalCommandListUpdated) {
-            var commandData = registeredCommands.stream().filter(command -> executor.getName().equals(command.getName())).findFirst().orElse(null);
-            if (commandData != null) {
-                launcher.getDiscordApi().getShardById(0).deleteCommandById(commandData.getId()).queue();
-                registeredCommands.remove(commandData);
+        if (commandListUpdated) {
+            if (guild == null) {
+                registeredCommands.get(null).stream().filter(command -> executor.getName().equals(command.getName())).findFirst().ifPresent(command -> {
+                    launcher.getDiscordApi().getShardById(0).deleteCommandById(command.getId()).queue();
+                    registeredCommands.get(null).remove(command);
+                });
+            } else {
+                registeredCommands.get(guild.getIdLong()).stream().filter(command -> executor.getName().equals(command.getName())).findFirst().ifPresent(command -> {
+                    guild.deleteCommandById(command.getId()).queue();
+                    registeredCommands.get(guild.getIdLong()).remove(command);
+                });
             }
         } else {
             throw new IllegalStateException("Global command list has not been updated yet.");
         }
     }
 
-    private void addCommands(CommandData... commands) {
-        if (globalCommandListUpdated) {
-            Arrays.stream(commands).forEach(command -> {
-                launcher.getDiscordApi().getShardById(0).upsertCommand(command).queue(reg -> registeredCommands.add(reg));
-            });
+    private void addCommands(Guild guild, CommandData... commands) {
+        if (commandListUpdated) {
+            if (guild == null) {
+                Arrays.stream(commands).forEach(command -> {
+                    launcher.getDiscordApi().getShardById(0).upsertCommand(command).queue(reg -> registeredCommands.get(null).add(reg));
+                });
+            } else {
+                Arrays.stream(commands).forEach(command -> {
+                    guild.upsertCommand(command).queue(reg -> registeredCommands.computeIfAbsent(guild.getIdLong(), key -> new ArrayList<>()).add(reg));
+                });
+            }
         } else {
-            if (updateAction == null)
-                updateAction = launcher.getDiscordApi().getShardById(0).updateCommands();
+            if (guild == null) {
+                if (globalUpdateAction == null)
+                    globalUpdateAction = launcher.getDiscordApi().getShardById(0).updateCommands();
+                globalUpdateAction.addCommands(commands);
 
-            updateAction.addCommands(commands);
+            } else {
+                guildUpdateActions.computeIfAbsent(guild.getIdLong(), key -> guild.updateCommands()).addCommands(commands);
+            }
         }
     }
 
     private void addCommandOptions(SlashCommandData command, CommandExecutor executor) {
-        executor.getValueOptions().stream().map(option -> {
+        executor.getValueOptions().stream()
+                .sorted(Comparator.comparing(CommandValueOption::required).reversed())
+                .map(option -> {
                     val optionData = new OptionData(option.optionType(), option.optionName(), option.optionDescription(), option.required(), option.autoComplete());
                     if (!option.getChoices().isEmpty()) {
                         switch (option.optionType()) {
-                            case STRING -> option.getChoices().forEach((key, value) -> optionData.addChoice(key, (String) value));
-                            case INTEGER -> option.getChoices().forEach((key, value) -> optionData.addChoice(key, (Long) value));
-                            case NUMBER -> option.getChoices().forEach((key, value) -> optionData.addChoice(key, (Double) value));
+                            case STRING ->
+                                    option.getChoices().forEach((key, value) -> optionData.addChoice(key, (String) value));
+                            case INTEGER ->
+                                    option.getChoices().forEach((key, value) -> optionData.addChoice(key, (Long) value));
+                            case NUMBER ->
+                                    option.getChoices().forEach((key, value) -> optionData.addChoice(key, (Double) value));
                             default -> throw new IllegalStateException("Unexpected value: " + option.optionType());
                         }
                     }
@@ -95,12 +120,14 @@ public abstract class CommandRegistrar {
     }
 
     protected void queue() {
-        updateAction.queue(commands -> registeredCommands = new ArrayList<>(commands));
-        updateAction = null;
-        globalCommandListUpdated = true;
+        globalUpdateAction.queue(commands -> registeredCommands.put(null, new ArrayList<>(commands)));
+        guildUpdateActions.forEach((guildId, action) -> action.queue(commands -> registeredCommands.computeIfAbsent(guildId, key -> new ArrayList<>(commands))));
+        globalUpdateAction = null;
+        guildUpdateActions.clear();
+        commandListUpdated = true;
     }
 
     protected List<Command> getRegisteredCommands() {
-        return registeredCommands;
+        return registeredCommands.values().stream().flatMap(Collection::stream).toList();
     }
 }

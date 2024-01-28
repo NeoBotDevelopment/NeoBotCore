@@ -59,27 +59,27 @@ repositories {
 dependencies {
     // Logger
     implementation 'org.slf4j:slf4j-api:2.0.6'
-    implementation 'ch.qos.logback:logback-core:1.4.6'
-    implementation 'ch.qos.logback:logback-classic:1.4.6'
+    implementation 'ch.qos.logback:logback-core:1.4.14'
+    implementation 'ch.qos.logback:logback-classic:1.4.14'
 
     // ClientLib
-    api 'com.github.NeoBotDevelopment:NeoBotApi:develop-SNAPSHOT'
+    api 'com.github.NeoBotDevelopment:NeoBotApi:2.2.0'
 
     // Parser
     implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.16.1'
 
     // Commons Library
-    implementation 'commons-io:commons-io:2.13.0'
+    implementation 'commons-io:commons-io:2.15.1'
     implementation 'commons-codec:commons-codec:1.16.0'
-    implementation 'org.apache.commons:commons-lang3:3.13.0'
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
 
     // SQL
-    implementation 'com.mysql:mysql-connector-j:8.1.0'
-    implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
-    implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
+    implementation 'com.mysql:mysql-connector-j:8.2.0'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.3.2'
+    implementation 'org.xerial:sqlite-jdbc:3.44.1.0'
 
     // Other
     implementation 'de.vandermeer:asciitable:0.3.2'
